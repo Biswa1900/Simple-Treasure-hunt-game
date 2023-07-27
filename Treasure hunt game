@@ -1,0 +1,68 @@
+import time
+
+# Define the game rooms and their connections
+rooms = {
+    'entrance': {'east': 'kitchen'},
+    'kitchen': {'west': 'entrance', 'north': 'dining_room'},
+    'dining_room': {'south': 'kitchen', 'east': 'bedroom'},
+    'bedroom': {'west': 'dining_room', 'south': 'treasure_room'},
+    'treasure_room': {'north': 'bedroom'}
+}
+
+# Define the items in each room
+items = {
+    'kitchen': 'knife',
+    'dining_room': 'plate',
+    'bedroom': 'key',
+    'treasure_room': 'treasure'
+}
+
+# Player's inventory
+inventory = []
+
+def display_inventory():
+    print("Inventory:", ', '.join(inventory))
+
+def start_game():
+    print("Welcome to the Dungeon Escape Game!")
+    print("You find yourself at the entrance of a mysterious dungeon.")
+    print("Your goal is to escape the dungeon with the treasure.")
+    print("Good luck!")
+
+def get_player_choice(room):
+    print(f"You are in the {room}.\nChoose your next move:")
+    possible_moves = list(rooms[room].keys())
+    print("Available moves:", ', '.join(possible_moves))
+    choice = input("Enter your move: ").lower()
+    return choice
+
+def move_to_next_room(room, direction):
+    return rooms[room][direction]
+
+def check_for_item(room):
+    if room in items and items[room] not in inventory:
+        print(f"You found a {items[room]} in the {room}!")
+        inventory.append(items[room])
+
+def play_game():
+    start_game()
+    current_room = 'entrance'
+
+    while True:
+        time.sleep(1)  # Add a small delay for a better user experience
+        check_for_item(current_room)
+        display_inventory()
+        
+        if current_room == 'treasure_room' and 'treasure' in inventory:
+            print("Congratulations! You escaped the dungeon with the treasure!")
+            break
+
+        player_choice = get_player_choice(current_room)
+
+        if player_choice in rooms[current_room]:
+            current_room = move_to_next_room(current_room, player_choice)
+        else:
+            print("Invalid move. Try again.")
+
+if __name__ == "__main__":
+    play_game()
